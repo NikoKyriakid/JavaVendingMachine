@@ -22,7 +22,6 @@ public class VendingMachineImpl implements VendingMachine {
         for (Double coinType : list) {
             this.availableCoins.put(coinType, 0);
         }
-
     }
 
     private ProductSlot getProductSlot(int slot) {
@@ -80,7 +79,7 @@ public class VendingMachineImpl implements VendingMachine {
             price = this.getProductSlot(slot).getPrice();
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            throw e;
         }
         return price;
     }
@@ -126,14 +125,30 @@ public class VendingMachineImpl implements VendingMachine {
         this.setCoins(type, this.availableCoins.get(type) - amountOfCoinsToRemove);
     }
 
+    public boolean checkCoins(List<Double> coinList) {
+        for (Double type: coinList) {
+            if(!this.availableCoins.containsKey(type)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * Gets an List of Doubles eg 1,1,0.5,0.5,0.2,0.2 and adds them one by one
      * to the machine change capacity based on the type.
      * if type is not supported it will log a message stating that.
      *
      * @param coinList  list of coins to be added based on the type of each coin
+     * @param atomic    boolean that specifies if we need each operation to be atomic
+     *                  i.e. either fail and leave the state untouched,
+     *                  or succeed and finish in a completely updated state
      */
-    public void addCoinsByList(List<Double> coinList) {
+    public void addCoinsByList(List<Double> coinList, boolean atomic) {
+        // Have to check the types of the coins before their insertions in case of atomic = true
+        if (atomic && this.checkCoins(coinList) == false) {
+            throw new IllegalArgumentException("One or more of the coins you inserted is not supported.");
+        }
         for (Double x: coinList) {
             try {
                 this.addCoins(x, 1);
@@ -178,6 +193,7 @@ public class VendingMachineImpl implements VendingMachine {
 
     public /*List<Double>*/ void buyProduct(int slot, List<Double> coinsIn) {
         double sum = 0.0;
+
         double price = this.getPrice(slot);
         int quantity = this.getQuantity(slot);
 
@@ -189,17 +205,21 @@ public class VendingMachineImpl implements VendingMachine {
             throw new IllegalStateException("The item is sold out.");
         }
 
+        /*
+         * Adding the coins of the user in the coins inventory, this allows the system to take into account
+         * the extra coins when calculating the change that needs to be given back to the user
+         */
+        try {
+            this.addCoinsByList(coinsIn, true);
+        } catch (Exception e) {
+            throw e;
+        }
+
         for (Double x : coinsIn) sum += x;
 
         if (sum < price) {
             throw new IllegalArgumentException("Not enough money provided.");
         }
-
-        /*
-         * Adding the coins of the user in the coins inventory, this allows the system to take into account
-         * the extra coins when calculating the change that needs to be given back to the user
-         */
-        this.addCoinsByList(coinsIn);
 
         /* changeMap is the list of <Double,Integer> representing <typeOfCoin,amount>
          * The list will be populated by the bestSetOfCoins method.
@@ -210,7 +230,7 @@ public class VendingMachineImpl implements VendingMachine {
         if (success == 1) {
             this.getProductSlot(slot).subtract();
             this.removeCoinsByMap(changeMap);
-            System.out.println("Thank you for your purchase");
+            System.out.println("Thank you for your purchase.\nPlease collect your change of " + VendingMachineImpl.round(sum-price));
         } else {
             this.removeCoinsByList(coinsIn);
             System.out.println("We cannot provide enough change.\nPlease collect your money.");
@@ -248,9 +268,7 @@ public class VendingMachineImpl implements VendingMachine {
             else if (next != null) {
                 res = bestSetOfCoins(remaining, next, coinsList, map);
             }
-            if (res == 1) {
-                return 1;
-            }
+            if (res == 1) return 1;
         }
 
         return res;

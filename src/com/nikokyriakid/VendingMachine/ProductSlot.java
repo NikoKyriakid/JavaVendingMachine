@@ -26,7 +26,7 @@ public class ProductSlot {
             throw new IllegalArgumentException("Price cannot be a negative value.");
         }
 
-        if (this.price > 0 && this.quantity == 0) {
+        if (price > 0 && this.quantity == 0) {
             throw new IllegalStateException("No quantity in this slot to set a price for.");
         }
         this.price = price;
