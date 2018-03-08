@@ -2,11 +2,12 @@ package com.nikokyriakid.VendingMachine;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
 
-public class VendingMachineImpl {
+public class VendingMachineImpl implements VendingMachine {
 
     private int slotsSize;
     private ProductSlot[] slots;
@@ -27,6 +28,15 @@ public class VendingMachineImpl {
 
     }
 
+    @Override
+    public void reset() {
+        for (int i=0; i<this.slotsSize; i++) {
+            this.slots[i] = new ProductSlot(i);
+        }
+
+        this.availableCoins.forEach((k,v) -> v = 0);
+    }
+
     private ProductSlot getProductSlot(int slot) {
         if (slot < 0 || slot >= this.slotsSize) {
             // Here we could use ArrayIndexOutOfBoundsException as well
@@ -39,6 +49,7 @@ public class VendingMachineImpl {
         return ps;
     }
 
+    @Override
     public int getQuantity(int slot) {
         int quantity = -1;
         try {
@@ -50,6 +61,7 @@ public class VendingMachineImpl {
         return quantity;
     }
 
+    @Override
     public void setQuantity(int slot, int quantity) {
         try {
             this.getProductSlot(slot).setQuantity(quantity);
@@ -59,6 +71,7 @@ public class VendingMachineImpl {
         }
     }
 
+    @Override
     public double getPrice(int slot) {
         double price = -1;
         try {
@@ -70,6 +83,7 @@ public class VendingMachineImpl {
         return price;
     }
 
+    @Override
     public void setPrice(int slot, double price) {
         try {
             this.getProductSlot(slot).setPrice(price);
@@ -79,6 +93,7 @@ public class VendingMachineImpl {
         }
     }
 
+    @Override
     public int getCoins(double type) {
         return this.availableCoins.get(type);
     }
@@ -114,6 +129,7 @@ public class VendingMachineImpl {
      * @param coinList
      * @return void
      */
+    @Override
     public void addCoins(List<Double> coinList) {
         for (Double x: coinList) {
             try {
@@ -156,6 +172,8 @@ public class VendingMachineImpl {
             }
         }
     }
+
+    public
 
     public /*List<Double>*/ void buyProduct(int slot, List<Double> coinsIn) {
         double sum = 0.0;
