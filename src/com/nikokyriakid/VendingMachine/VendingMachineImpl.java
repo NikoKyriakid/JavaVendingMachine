@@ -1,9 +1,6 @@
 package com.nikokyriakid.VendingMachine;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
 
@@ -28,15 +25,6 @@ public class VendingMachineImpl implements VendingMachine {
 
     }
 
-    @Override
-    public void reset() {
-        for (int i=0; i<this.slotsSize; i++) {
-            this.slots[i] = new ProductSlot(i);
-        }
-
-        this.availableCoins.forEach((k,v) -> v = 0);
-    }
-
     private ProductSlot getProductSlot(int slot) {
         if (slot < 0 || slot >= this.slotsSize) {
             // Here we could use ArrayIndexOutOfBoundsException as well
@@ -47,6 +35,20 @@ public class VendingMachineImpl implements VendingMachine {
             throw new IllegalArgumentException("The specified product slot doesn't exist.");
         }
         return ps;
+    }
+
+    public ProductSlot[] getProductSlots() {
+        return this.slots;
+    }
+
+
+    @Override
+    public void reset() {
+        for(ProductSlot pSlot: this.slots) {
+            pSlot.setPrice(0);
+            pSlot.setQuantity(0);
+        }
+        this.availableCoins.forEach((k,v) -> v = 0);
     }
 
     @Override
@@ -98,27 +100,30 @@ public class VendingMachineImpl implements VendingMachine {
         return this.availableCoins.get(type);
     }
 
-    public void addCoinsByType(double type, int amount) {
-        if (amount < 0) {
-            // here we could just say return and print that nothing was changed. As there was nothing to add.
-            throw new IllegalArgumentException("Coins amount cannot be a negative value.");
-        }
+    @Override
+    public void setCoins(double type, int amountOfCoins) {
         if (this.availableCoins.containsKey(type)) {
-            this.availableCoins.put(type, amount+this.availableCoins.get(type));
+            this.availableCoins.put(type, amountOfCoins);
         } else {
             throw new IllegalArgumentException("This type of coin is not accepted.");
         }
     }
 
-    public void removeCoinsByType(double type, int amount) {
-        if (amount < 0) {
+    @Override
+    public void addCoins(double type, int amountOfCoinsToAdd) {
+        if (amountOfCoinsToAdd < 0) {
+            // here we could just say return and print that nothing was changed. As there was nothing to add.
             throw new IllegalArgumentException("Coins amount cannot be a negative value.");
         }
-        if (this.availableCoins.containsKey(type) && this.availableCoins.get(type) >= amount) {
-            this.availableCoins.put(type, this.availableCoins.get(type) - amount);
-        } else {
-            throw new IllegalArgumentException("This type of coin is not accepted or not enough coins of type " + type + " in the change capacity.");
+        this.setCoins(type, amountOfCoinsToAdd + this.availableCoins.get(type));
+    }
+
+    @Override
+    public void removeCoins(double type, int amountOfCoinsToRemove) {
+        if (amountOfCoinsToRemove < 0) {
+            throw new IllegalArgumentException("Coins amount cannot be a negative value.");
         }
+        this.setCoins(type, this.availableCoins.get(type) - amountOfCoinsToRemove);
     }
 
     /**
@@ -126,14 +131,12 @@ public class VendingMachineImpl implements VendingMachine {
      * to the machine change capacity based on the type.
      * if type is not supported it will log a message stating that.
      *
-     * @param coinList
-     * @return void
+     * @param coinList  list of coins to be added based on the type of each coin
      */
-    @Override
-    public void addCoins(List<Double> coinList) {
+    public void addCoinsByList(List<Double> coinList) {
         for (Double x: coinList) {
             try {
-                this.addCoinsByType(x, 1);
+                this.addCoins(x, 1);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -146,10 +149,10 @@ public class VendingMachineImpl implements VendingMachine {
      *
      * @param coinList The key value pairs of the coin type and the amount of that type
      */
-    public void removeCoins(TreeMap<Double, Integer> coinList) {
+    public void removeCoinsByMap(TreeMap<Double, Integer> coinList) {
         coinList.forEach((type, amount) -> {
             try {
-                this.removeCoinsByType(type, amount);
+                this.removeCoins(type, amount);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -161,19 +164,17 @@ public class VendingMachineImpl implements VendingMachine {
      * ie. a sequence of all the coins not mapped by type and amount as in case of TreeMap
      * For each list item we remove a coin of that type by the amount of one.
      *
-     * @param coinList
+     * @param coinList list of coins to be removed based on the type of each coin
      */
-    public void removeCoins(List<Double> coinList) {
+    public void removeCoinsByList(List<Double> coinList) {
         for (Double type: coinList) {
             try {
-                this.removeCoinsByType(type, 1);
+                this.removeCoins(type, 1);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
     }
-
-    public
 
     public /*List<Double>*/ void buyProduct(int slot, List<Double> coinsIn) {
         double sum = 0.0;
@@ -198,7 +199,7 @@ public class VendingMachineImpl implements VendingMachine {
          * Adding the coins of the user in the coins inventory, this allows the system to take into account
          * the extra coins when calculating the change that needs to be given back to the user
          */
-        this.addCoins(coinsIn);
+        this.addCoinsByList(coinsIn);
 
         /* changeMap is the list of <Double,Integer> representing <typeOfCoin,amount>
          * The list will be populated by the bestSetOfCoins method.
@@ -208,10 +209,10 @@ public class VendingMachineImpl implements VendingMachine {
 
         if (success == 1) {
             this.getProductSlot(slot).subtract();
-            this.removeCoins(changeMap);
+            this.removeCoinsByMap(changeMap);
             System.out.println("Thank you for your purchase");
         } else {
-            this.removeCoins(coinsIn);
+            this.removeCoinsByList(coinsIn);
             System.out.println("We cannot provide enough change.\nPlease collect your money.");
         }
     }

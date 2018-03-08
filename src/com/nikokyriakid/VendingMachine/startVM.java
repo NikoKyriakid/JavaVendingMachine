@@ -52,7 +52,7 @@ public class startVM {
                 System.out.print("Type Coins: ");
                 coins = reader.next();
                 ary = coins.split(",");
-                vm.addCoins(Arrays.asList(ary).stream().map(s -> Double.parseDouble(s)).collect(toList()));
+                vm.addCoinsByList(Arrays.asList(ary).stream().map(s -> Double.parseDouble(s)).collect(toList()));
             } else if (input == 5) {
                 vm.displaySlots();
             } else if (input == 6) {
@@ -68,25 +68,12 @@ public class startVM {
     }
 
     public static void populateDefaults(VendingMachineImpl vm) {
-        vm.setQuantity(0, 2);
-        vm.setQuantity(1, 3);
-        vm.setQuantity(2, 4);
-        vm.setQuantity(3, 5);
-        vm.setQuantity(4, 6);
-        vm.setQuantity(5, 2);
-        vm.setQuantity(6, 3);
-        vm.setQuantity(7, 2);
-        vm.setQuantity(8, 2);
-        vm.setQuantity(9, 0);
-
-        vm.setPrice(1, 1.20);
-        vm.setPrice(2, 2.20);
-        vm.setPrice(3, 0);
-        vm.setPrice(4, 1.30);
-        vm.setPrice(5, 1.40);
-        vm.setPrice(6, 1.50);
-        vm.setPrice(7, 1.60);
-        vm.setPrice(8, 2.20);
-        vm.setPrice(9, 0.40);
+        for (ProductSlot pSlot: vm.getProductSlots()){
+            int q = (int) (Math.random() * 10);
+            double p = (Math.random() * (5.0 - 0.20)) + 0.20;
+            p = Math.floor(p*10)/10;
+            pSlot.setQuantity(q);
+            pSlot.setPrice(p);
+        }
     }
 }

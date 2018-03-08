@@ -10,11 +10,10 @@ public interface VendingMachine {
     public void setPrice(int slot, double price);
 
     public int getCoins(double type);
-    public void setCoins(double type, int numberOfCoins);
+    public void setCoins(double type, int amountOfCoins);
 
-    public void addCoin(double type);
-    public void addCoins(List<Double> coinList);
+    public void addCoins(double type, int amountOfCoinsToAdd);
+    public void removeCoins(double type, int amountOfCoinsToRemove);
 
-    public List<Double> refund();
     public void reset();
 }
