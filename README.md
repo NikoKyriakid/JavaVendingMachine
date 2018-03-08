@@ -1,3 +1,4 @@
+
 # JavaVendingMachine
 
 This is a JAVA Application that simulates the functionality of a Vending Machine.
@@ -19,7 +20,16 @@ git clone https://github.com/NikoKyriakid/JavaVendingMachine.git
 cd JavaVendingMachine
 # 3. Run ant, which will build and display instructions to run the app
 ant
+# 4. The instruction will hold two ways of running the application
+# 4.1 Run the script by (run is a script created by ant builder)
+sh run
+# 4.2 Or run the jar file by
+java -jar <currentPath>/dist/VendingMachine.jar
 ```
+
+### Functionality
+
+
 
 ## Built With
 
