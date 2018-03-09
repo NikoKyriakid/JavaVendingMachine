@@ -88,7 +88,7 @@ The logic goes this way:
         This way we are using dynamic programming to solve a complex problem by breaking it down into a collection of simpler subproblems,
         solving each of those subproblems just once, and storing their solutions.
     6. If `bestSetOfCoins` comes successful start returning in order to stop recursion.
-    7. If `bestSetOfCoins` comes unsuccessful decrease the X by one and go to `Step 3.1`. This will try to create different combination.
+    7. If `bestSetOfCoins` comes unsuccessful decrease the X by one and go to `Step 3.i`. This will try to create different combination.
     
 Please bare in mind this algorithm always tries to use the most of the big-in-value coins and if it fails to find a 
 combination it decreases by one the times it used the big-in-value coins. This way it will easily generate 2.10
