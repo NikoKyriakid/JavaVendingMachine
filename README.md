@@ -5,7 +5,9 @@ This is a JAVA Application that simulates the functionality of a Vending Machine
 
 ## Getting Started
 
-1. Make sure you have a Java environment installed. [Download](https://java.com/en/download/)
+1. Make sure you have a Java environment installed. [Download](https://java.com/en/download/)<br>
+   You will need the JDK as well if you want to do more than just running the app eg. compiling.
+   http://www.oracle.com/technetwork/java/javase/downloads/index.html
 2. Install Ant [Apache Ant](https://ant.apache.org/manual/index.html) 
     - Download Ant. See [Binary Distribution](http://ant.apache.org/bindownload.cgi) for details.
     - Uncompress the downloaded file into a directory.
