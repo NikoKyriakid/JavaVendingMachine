@@ -191,7 +191,7 @@ public class VendingMachineImpl implements VendingMachine {
         }
     }
 
-    public /*List<Double>*/ void buyProduct(int slot, List<Double> coinsIn) {
+    public void buyProduct(int slot, List<Double> coinsIn) {
         double sum = 0.0;
 
         double price = this.getPrice(slot);
