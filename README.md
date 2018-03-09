@@ -32,8 +32,31 @@ java -jar <currentPath>/dist/VendingMachine.jar
 ```
 
 ### Functionality
+The Vending Machine App has the following actions
 
-
+1. **Set Quantity**
+    - You will have to choose the slot number
+    - and then the integer number of the amount
+2. **Set Price**
+    - You will have to choose the slot number
+    - and then the floating number of the price
+3. **Buy Product**
+    - You will have to choose the slot number of the product
+    - Add coins by typing a comma separated list of floating numbers
+        like `1,1,0.5,0.2`
+    - Number of error can occur here: No enough money provided, Coin type not supported, inability of the machine to provide the change to the buyer   
+4. **Add Coins**
+    - Add coins by typing a comma separated list of floating numbers like `1,1,0.5,0.2`
+5. **Print Slots**
+    - Display the Slots of the machine along with the prices and the quantities
+6. **Print Change**
+    - Prints the coins currently in the Vending Machine
+7. **Populate Slots**
+    - Populates with random values the quantities and the prices)*
+8. **Populate Coins**
+    - Adds random coins to the Vending Machine
+9. **Reset**
+0. **Exit**
 
 ## Built With
 
@@ -47,4 +70,4 @@ java -jar <currentPath>/dist/VendingMachine.jar
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License
