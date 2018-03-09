@@ -3,6 +3,7 @@ package com.nikokyriakid.VendingMachine;
 import java.util.*;
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
+import java.util.stream.Collectors;
 
 public class VendingMachineImpl implements VendingMachine {
 
@@ -47,7 +48,7 @@ public class VendingMachineImpl implements VendingMachine {
             pSlot.setPrice(0);
             pSlot.setQuantity(0);
         }
-        this.availableCoins.forEach((k,v) -> v = 0);
+        this.availableCoins.replaceAll((k,v) -> 0);
     }
 
     @Override

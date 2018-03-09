@@ -41,7 +41,7 @@
         <echo message="The run functionality was disabled because of misbehaviour of the terminals output."/>
         <echo message="Please use one of these commands instead"/>
         <echo message="========================================================================================"/>
-        <echo message="$ sh run"/>
+        <echo message="$ sh run     [Unix system only]"/>
         <echo message="  - OR - "/>
         <echo message="$ java -jar ${dist.dir}/${projectName}.jar"/>
         <echo message="========================================================================================"/>

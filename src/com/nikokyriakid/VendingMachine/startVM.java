@@ -7,10 +7,11 @@ import java.util.Scanner;
 
 public class startVM {
     public static void main(String[] args) {
-        int slot, quantity, input, slotSize = 10;
-        double price;
+        int slot=-1, quantity=0, input=-1, slotSize = 10;
+        double price = 0;
         boolean alive = true;
-        String coins, ary[];
+        String coins="", ary[];
+
         VendingMachineImpl vm = new VendingMachineImpl(slotSize, Arrays.asList(0.10, 0.20, 0.50, 1.0, 2.0));
 
         System.out.println("================ Vending Machine by NK =================");
@@ -35,24 +36,41 @@ public class startVM {
                     System.exit(0);
                     break;
                 case 1:
-                    System.out.print("Type slot (0-9): ");
-                    slot = reader.nextInt();
-                    System.out.print("Type quantity (0-9): ");
-                    quantity = reader.nextInt();
-                    vm.setQuantity(slot, quantity);
+                    try {
+                        System.out.print("Type slot (0-9): ");
+                        slot = reader.nextInt();
+                        System.out.print("Type quantity (0-9): ");
+                        quantity = reader.nextInt();
+                        vm.setQuantity(slot, quantity);
+                    } catch (Exception e) {
+                        System.out.println("No valid input. Cancelling the action.");
+                        reader.nextLine();
+                    }
                     break;
                 case 2:
-                    System.out.print("Type slot (0-9): ");
-                    slot = reader.nextInt();
-                    System.out.print("Type Price (eg 1.2): ");
-                    price = reader.nextDouble();
-                    vm.setPrice(slot, price);
+                    try {
+                        System.out.print("Type slot (0-9): ");
+                        slot = reader.nextInt();
+                        System.out.print("Type Price (eg 1.2): ");
+                        price = reader.nextDouble();
+                        vm.setPrice(slot, price);
+                    } catch (Exception e) {
+                        System.out.println("No valid input. Cancelling the action.");
+                        reader.nextLine();
+                    }
                     break;
                 case 3:
-                    System.out.print("Type slot (0-9): ");
-                    slot = reader.nextInt();
-                    System.out.print("Put Coins (eg. 1,1,2,0.5,0.2): ");
-                    coins = reader.next();
+                    try {
+                        System.out.print("Type slot (0-9): ");
+                        slot = reader.nextInt();
+                        System.out.print("Put Coins (eg. 1,1,2,0.5,0.2): ");
+                        coins = reader.next();
+                    } catch (Exception e) {
+                        System.out.println("No valid input. Cancelling the action.");
+                        reader.nextLine();
+                        break;
+                    }
+
                     ary = coins.split(",");
 
                     try {
@@ -62,14 +80,19 @@ public class startVM {
                     }
                     break;
                 case 4:
-                    System.out.print("Type Coins (eg. 1,1,2,0.5,0.2): ");
-                    coins = reader.next();
-                    ary = coins.split(",");
                     try {
-                        vm.addCoinsByList(Arrays.asList(ary).stream().map(s -> Double.parseDouble(s)).collect(toList()), true);
+                        System.out.print("Type Coins (eg. 1,1,2,0.5,0.2): ");
+                        coins = reader.next();
+                        ary = coins.split(",");
+                        try {
+                            vm.addCoinsByList(Arrays.asList(ary).stream().map(s -> Double.parseDouble(s)).collect(toList()), true);
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
+
                     break;
                 case 5:
                     vm.displaySlots();
