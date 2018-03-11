@@ -13,7 +13,7 @@ This is a JAVA Application that simulates the functionality of a Vending Machine
     - Uncompress the downloaded file into a directory.
     - Set environmental variables `JAVA_HOME` to your Java environment, `ANT_HOME` to the directory you uncompressed Ant to, and add `${ANT_HOME}/bin` (Unix) or `%ANT_HOME%/bin` (Windows) to your `PATH`.
 
-### Installing And Running
+## Installing And Running
 
 ```bash
 # 1. Git clone the repo
@@ -72,7 +72,7 @@ Which was causing problems to the calculations. This problem was solved using `M
 Some extra for loops were implemented for better readability, eg. the method `addCoinsByList`, that adds the coins from a list, could at the same time return the sum instead of void. 
 So I separated those code blocks and that way I had to do two loops instead of one.
 
-#### Strategy that was chosen for providing the “best” set of coins
+## Strategy that was chosen for providing the “best” set of coins
 This was done in the method `static int bestSetOfCoins()` of `VendingMachineImpl` class.
 Here I applied operations between `List` objects and `TreeMap` objects mainly as no class was created to represent the coins and any other inventory.
 
